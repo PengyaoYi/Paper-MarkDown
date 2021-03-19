@@ -9,3 +9,4 @@ tricks：
 2. 跨层参数共享
 3. 因式分解embedding参数
 其他：模型不会过拟合时 不用dropout 可以提升指标一点点；warm-start可以加快复杂网络收敛
+
