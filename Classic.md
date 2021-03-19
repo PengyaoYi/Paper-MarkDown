@@ -17,6 +17,4 @@ encoder-decoder结构。模型层面是一个seq2seq with Attention的模型
 #### Multi-Head Self-Attention
 ![figure 2](https://github.com/PengyaoYi/Mardown-photograph/blob/main/Scaled%20Dot-Product%20Attention.png)
 
-测试 
-
 $e^{i \pi} + 1 = 0$
