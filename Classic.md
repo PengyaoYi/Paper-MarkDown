@@ -18,4 +18,4 @@ encoder-decoder结构。模型层面是一个seq2seq with Attention的模型
 ![figure 2](https://github.com/PengyaoYi/Mardown-photograph/blob/main/Scaled%20Dot-Product%20Attention.png)
 
 $e^{i \pi} + 1 = 0$
-$$ f(x)= a + b$$
+$$ f(x)= a + b \tage{2.1}$$
