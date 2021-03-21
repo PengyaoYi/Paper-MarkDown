@@ -10,3 +10,23 @@ tricks：
 3. 因式分解embedding参数
 其他：模型不会过拟合时 不用dropout 可以提升指标一点点；warm-start可以加快复杂网络收敛
 
+# Entity-level Factual Consistency of Abstractive Text Summarization
+提出了一种在生成式摘要中衡量实体层面事实一致性的评估方法；提出一个针对摘要的实体分类任务作为一个额外的任务以及摘要生产的方法
+
+刚读完摘要
+
+# Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks
+
+
+
+# RoBERTa: A Robustly Optimized BERT Pretraining Approach
+
+研究BERT中超参数的影响，认为BERT训练还不够充分。用了一个新的数据集CC-News;证明了MLM足够厉害
+
+改进：
+
+1. 用更大的batches和更多数据训练更长的时间
+2. 取消NSP任务
+3. 用更长的序列进行训练
+4. 动态调整mask机制
+
