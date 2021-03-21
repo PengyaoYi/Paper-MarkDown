@@ -1,10 +1,82 @@
-test
 
-! [] https://github.com/PengyaoYi/Mardown-photograph/blob/main/Bert-overall.png?raw=ture)
 
-! [figure1](https://github.com/PengyaoYi/Mardown-photograph/blob/main/transformer.png?raw=true) 
+# BERT
 
-! [ ](https://github.com/PengyaoYi/Mardown-photograph/blob/main/transformer.png?raw=true)
 
-![](https://github.com/PengyaoYi/Mardown-photograph/blob/main/Bert-overall.png?row=true)
 
+![](https://github.com/PengyaoYi/Mardown-photograph/blob/main/Bert-overall.png?raw=true)
+
+#### BERT结构、训练过程
+
+使用Transformer的encoder端，作为一个文本编码器，使用大规模数据进行预训练，预训练使用两个loss，一个是mask LM，遮蔽掉源端的一些字（可能会被问到mask的具体做法，15%概率mask词，这其中80%用[mask]替换，10%随机替换一个其他字，10%不替换，至于为什么这么做，那就得问问BERT的作者了\{捂脸}），然后根据上下文去预测这些字，一个是next sentence，判断两个句子是否在文章中互为上下句，然后使用了大规模的语料去预训练。在它之前是GPT，GPT是一个单向语言模型的预训练过程（**它和gpt的区别就是bert为啥叫双向 bi-directional**），更适用于文本生成，通过前文去预测当前的字。下图为transformer的结构，bert的网络结构则用了左边的encoder。
+
+BERT由12层transformer layer（encoder端）构成，首先word emb , pos emb（可能会被问到有哪几种position embedding的方式，bert是使用的哪种）, sent emb做加和作为网络输入，每层由一个multi-head attention, 一个feed forward 以及两层layerNorm构成，一般会被问到multi-head attention的结构，具体可以描述为
+
+***step1\***
+
+一个768的hidden向量，被映射成query， key， value。 然后三个向量分别切分成12个小的64维的向量，每一组小向量之间做attention。不妨假设batch_size为32，seqlen为512，隐层维度为768，12个head
+
+hidden(32 x 512 x 768) -> query(32 x 512 x 768) -> 32 x 12 x 512 x 64
+
+hidden(32 x 512 x 768) -> key(32 x 512 x 768) -> 32 x 12 x 512 x 64
+
+hidden(32 x 512 x 768) -> val(32 x 512 x 768) -> 32 x 12 x 512 x 64
+
+***step2\***
+
+然后query和key之间做attention，得到一个32 x 12 x 512 x 512的权重矩阵，然后根据这个权重矩阵加权value中切分好的向量，得到一个32 x 12 x 512 x 64 的向量，拉平输出为768向量。
+
+32 x 12 x 512 x 64(query_hidden) * 32 x 12 x 64 x 512(key_hidden) -> 32 x 12 x 512 x 512
+
+32 x 12 x 64 x 512(value_hidden) * 32 x 12 x 512 x 512 (权重矩阵) -> 32 x 12 x 512 x 64
+
+然后再还原成 -> 32 x 512 x 768
+
+简言之是12个头，每个头都是一个64维度分别去与其他的所有位置的hidden embedding做attention然后再合并还原。
+
+#### wordPiece
+
+在数据预处理的时候都会有WordPiece的过程。WordPiece字面理解是把word拆成piece一片一片，WordPiece的一种主要的实现方式叫做BPE（Byte-Pair Encoding）双字节编码。
+
+BPE的过程可以理解为把一个单词再拆分，使得我们的此表会变得精简，并且寓意更加清晰。
+
+通过BPE得到了更加合适的词表了，这个词表可能会出现一些不是单词的组合，但是这个本身是有意义的一种形式，加速NLP的学习，提升不同词之间的语义的区分度。
+
+#### Bert问题
+
++ BERT 的在预训练时会出现特殊的[MASK]，但是它在下游的 fine-tune 中不会出现，这就出现了预训练阶段和 fine-tune 阶段不一致的问题。其实这个问题对最后结果产生多大的影响也是不够明确的，因为后续有许多 BERT 相关的预训练模型仍然保持了[MASK]标记，也取得了很大的结果，而且很多数据集上的结果也比 BERT 要好。但是确确实实引入[MASK]标记，也是为了构造自编码语言模型而采用的一种折中方式。
+
++ BERT 在分词后做[MASK]会产生的一个问题，为了解决 OOV 的问题，我们通常会把一个词切分成更细粒度的 WordPiece。BERT 在 Pretraining 的时候是随机 Mask 这些 WordPiece 的，这就可能出现只 Mask 一个词的一部分的情况
+
+#### Bert的输入和输出
+
+BERT 模型的主要输入是文本中各个字/词(或者称为 token)的原始词向量，该向量既可以随机初始化，也可以利用 Word2Vector 等算法进行预训练以作为初始值；输出是文本中各个字/词融合了全文语义信息后的向量表示，如下图所示（为方便描述且与 BERT 模型的当前中文版本保持一致，统一以**「字向量」**作为输入）：
+
+*BERT 模型通过查询字向量表将文本中的每个字转换为一维向量，作为模型输入；模型输出则是输入各字对应的融合全文语义信息后的向量表示。**此外，模型输入除了字向量(英文中对应的是 Token Embeddings)，还包含另外两个部分：
+
+1. 文本向量(英文中对应的是 Segment Embeddings)：该向量的取值在模型训练过程中自动学习，用于刻画文本的全局语义信息，并与单字/词的语义信息相融合
+2. 位置向量(英文中对应的是 Position Embeddings)：由于出现在文本不同位置的字/词所携带的语义信息存在差异（比如：“我爱你”和“你爱我”），因此，BERT 模型对不同位置的字/词分别附加一个不同的向量以作区分
+
+最后，BERT 模型将字向量、文本向量和位置向量的加和作为模型输入。特别地，在目前的 BERT 模型中，文章作者还将英文词汇作进一步切割，划分为更细粒度的语义单位（WordPiece），例如：将 playing 分割为 play 和##ing；此外，对于中文，目前作者未对输入文本进行分词，而是直接将单字作为构成文本的基本单位。
+
+需要注意的是，上图中只是简单介绍了单个句子输入 BERT 模型中的表示，实际上，在做 Next Sentence Prediction 任务时，在第一个句子的首部会加上一个[CLS] token，在两个句子中间以及最后一个句子的尾部会加上一个[SEP] token。
+
+#### 词袋模型到 word2vec 改进了什么？word2vec 到 BERT 又改进了什么？
+
+#####  词袋模型到 word2vec 改进了什么？
+
+词袋模型(Bag-of-words model)是将一段文本（比如一个句子或是一个文档）用一个“装着这些词的袋子”来表示，这种表示方式不考虑文法以及词的顺序。**「而在用词袋模型时，文档的向量表示直接将各词的词频向量表示加和」**。通过上述描述，可以得出词袋模型的两个缺点：
+
++ 词向量化后，词与词之间是有权重大小关系的，不一定词出现的越多，权重越大。
++ 词与词之间是没有顺序关系的。
+
+而 word2vec 是考虑词语位置关系的一种模型。通过大量语料的训练，将每一个词语映射成一个低维稠密向量，通过求余弦的方式，可以判断两个词语之间的关系，word2vec 其底层主要采用基于 CBOW 和 Skip-Gram 算法的神经网络模型。
+
+因此，综上所述，词袋模型到 word2vec 的改进主要集中于以下两点：
+
++ 考虑了词与词之间的顺序，引入了上下文的信息
++ 得到了词更加准确的表示，其表达的信息更为丰富
+
+##### 12.2 word2vec 到 BERT 又改进了什么？
+
+word2vec 到 BERT 的改进之处其实没有很明确的答案，如同上面的问题所述，BERT 的思想其实很大程度上来源于 CBOW 模型，如果从准确率上说改进的话，BERT 利用更深的模型，以及海量的语料，得到的 embedding 表示，来做下游任务时的准确率是要比 word2vec 高不少的。实际上，这也离不开模型的“加码”以及数据的“巨大加码”。再从方法的意义角度来说，BERT 的重要意义在于给大量的 NLP 任务提供了一个泛化能力很强的预训练模型，而仅仅使用 word2vec 产生的词向量表示，不仅能够完成的任务比 BERT 少了很多，而且很多时候直接利用 word2vec 产生的词向量表示给下游任务提供信息，下游任务的表现不一定会很好，甚至会比较差。
