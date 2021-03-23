@@ -74,3 +74,62 @@ $$
 f_M(x)=\sum_{m=1}^{M}T(x;\Theta_m)
 $$
 Boost方法分为加法模型（基函数线性组合）与前向分布算法。
+
+第m步模型是：
+$$
+f_m(x)=f_{m-1}(x)+T(x;\Theta_m)\\
+\hat\Theta_m=arg\mathop{min} \limits_{\theta_m}\sum_{i=1}^NL(y_i,f_{m-1}(x_i)+T(x_i;\Theta_m))
+$$
+**对于回归问题的提升树算法**
+
+一般使用平方误差损失函数，
+$$
+L(y,f(x))=(y-f(x))^2\\
+L(y,f_{m-1}(x)+T(x;\Theta_m))=[y-f_{m-1}(x)-T(x;\Theta_m)]^2
+=[r-T(x;\Theta_m)]^2\\
+其中r=y-f_{m-1}(x)
+$$
+
+
+输入：训练数据集$T={(x_1,y_1),(x_2,y_2),...,(x_N,y_N)}$
+
+输出：提升树$f_M(x)$
+
+1. 初始化$f_0(x)=0$
+2. 对于m=0,1,2,...,M:
+   1. 计算残差r
+   2. 拟合残差学习回归树得到$T(x;\Theta_m)$
+   3. 更新$f_m(x)=f_{m-1}(x)+T(x;\Theta_m)$
+
+3. 得到回归提升树$f_M(x)=\sum\limits_{m=1}^{M}T(x;\Theta_m)$
+
+**GBDT**
+
+输入：训练数据集$T={(x_1,y_1),(x_2,y_2),...,(x_N,y_N)}$
+
+输出：提升树$f_M(x)$
+
+1. 初始化$f_0(x)=arg\mathop{min}\limits_{c}\sum\limits_{i=1}^NL(y_i,c)$
+
+2. 对于m=0,1,2,...,M:
+
+   1. 计算残差r
+      $$
+      r_{mi}=-[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)}]_{f(x)=f_{m-1}(x)}
+      $$
+      
+
+   2. 拟合残差学习回归树得到第m棵树的叶节点区域$R_{mj},j=1,2,...,J$
+
+   3. 对$j=1,2,...,J$,计算
+      $$
+      c_{mj}=arg\mathop{min}\limits_c\sum\limits_{x_i\in R_mj}L(y_i,f_{m-1}(x_i)+c)
+      $$
+      
+
+   4. 更新$f_m(x)=f_{m-1}(x)+\sum\limits_{j=1}^{J}c_{mj}I(x\in R_{mj})$
+
+3. 得到回归提升树$f_M(x)=\sum\limits_{m=1}^{M}\sum\limits_{j=1}^{J}c_{mj}I(x\in R_{mj})$
+
+## XGBoost
+
