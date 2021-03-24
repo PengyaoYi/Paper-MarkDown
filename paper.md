@@ -21,6 +21,7 @@ CNN结构提升了8个点（斯皮尔曼系数）
 # ALBERT: A LITE BERT FOR SELF-SUPERVISED LEARNING OF LANGUAGE REPRESENTATIONS
 提出两种减少内存占用和增加训练速度的改进方法；提出自监督损失函数，增强句子内部的一致性，提升多句子输入的指标。
 tricks：
+
 1. 使用与NSP任务中不同的目标函数，用textual segments 代替了sentences，并且任务变为SOP sentence order prediction
 2. 跨层参数共享
 3. 因式分解embedding参数
