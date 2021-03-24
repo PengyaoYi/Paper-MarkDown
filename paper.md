@@ -1,7 +1,23 @@
 # MEDIASUM: A Large-scale Media Interview Dataset for Dialogue Summarization
 提出了MEDIASUM数据集，基于NPR和CNN媒体采访数据，对话形式，使用指针网络，UniLM和BART进行实验，并研究了在AMI，ICSI，SAMSum上及逆行迁移学习的效果
 # Evaluation of BERT and ALBERT Sentence Embedding Performance on Downstream NLP Tasks
-探究BERT和ALBERT中句子表征的效果；结合了SENT-BERT and ALBert， 并提出了SALBERT；引入一个CNN句子表征的外部结构；上述工作在句子相似度和自然语言推理数据集实验。
+探究BERT和ALBERT中句子表征的效果；结合了SENT-BERT and ALBert， 并提出了SALBERT；引入一个CNN句子表征的外部结构；上述工作在语义相似度和自然语言推理数据集实验。
+
+1. [CLS] token
+2. Pooled token 
+3. Sentence-BERT
+4. Sentence-ALBERT
+5. CNN-SENTBERT
+6. CNN-SALBERT
+
+### 结果
+
+[CLS]的皮尔森系数和斯皮尔曼系数<pooled<sentence bert
+
+孪生网络结构在sentence embedding上有很好的效果
+
+CNN结构提升了8个点（斯皮尔曼系数）
+
 # ALBERT: A LITE BERT FOR SELF-SUPERVISED LEARNING OF LANGUAGE REPRESENTATIONS
 提出两种减少内存占用和增加训练速度的改进方法；提出自监督损失函数，增强句子内部的一致性，提升多句子输入的指标。
 tricks：
