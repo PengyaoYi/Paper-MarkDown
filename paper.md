@@ -49,3 +49,10 @@ tricks：
 
 # Multi-Fact Correction in Abstractive Text Summarization
 
+# Answering Product-related Questions with Heterogeneous Information
+
+
+
+针对E-commerce product QA utilize heterogeneous information encoding 
+
+看到2.2了
