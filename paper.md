@@ -51,6 +51,7 @@ tricks：
 
 
 
+
 # Neural Extractive Summarization with Hierarchical Attentive Heterogeneous Graph Network
 抽取出的句子中含有许多荣誉的短语。用异构图模型建模不同粒度信息，减少句子依赖。redundacy-aware graph
 
@@ -73,3 +74,11 @@ drawbacks:
 2. 抽取子句单元是否可以解决问题1？ 如何定义子句单元
 3. 抽取细粒度单元是否可以增强抽取式摘要系统的performance
 4. 抽取细粒度是否导致了其他问题
+=======
+# Answering Product-related Questions with Heterogeneous Information
+
+
+
+针对E-commerce product QA utilize heterogeneous information encoding 
+
+看到2.2了
