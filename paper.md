@@ -49,3 +49,27 @@ tricks：
 
 # Multi-Fact Correction in Abstractive Text Summarization
 
+
+
+# Neural Extractive Summarization with Hierarchical Attentive Heterogeneous Graph Network
+抽取出的句子中含有许多荣誉的短语。用异构图模型建模不同粒度信息，减少句子依赖。redundacy-aware graph
+
+1. 
+
+# Modeling Content Importance for Summarization with Pre-trained Language Models
+
+以前的方法主要评估词层级的重要程度，没有考虑语义or更大的单元的重要程度 。太离谱了，用信息论的方法结合了预训练模型，结果还没bertsum 的baseline高。<font color=red>学习一下论文是怎么编的</font>
+
+# At Which Level Should We Extract? An Empirical Analysis on Extractive Document Summarization
+
+drawbacks:
+
+1. 包含冗余的，不必要的信息
+2. 包含重复信息
+
+文章解决了以下四个问题
+
+1. 抽取完整的句子是否导致了不必要或者重复的信息
+2. 抽取子句单元是否可以解决问题1？ 如何定义子句单元
+3. 抽取细粒度单元是否可以增强抽取式摘要系统的performance
+4. 抽取细粒度是否导致了其他问题
